@@ -193,6 +193,10 @@ public class FormCRUD {
                     sb.append( " where f.owner=" + ownerId + "" );
             }
             
+                if( sb.toString().contains("where"))
+                    sb.append( " AND f.status=1" );
+                else
+                    sb.append( " where f.status=1" );
             //sb.append( " WHERE f.status=1" );
             obj.put("query", new JSONString( sb.toString() ));
             
@@ -201,7 +205,7 @@ public class FormCRUD {
             if( first > -1)
                 obj.put("offset", new JSONNumber( first ) );
 
-            //Window.alert("Request= " + obj.toString());
+            //Window.alert( "Request=" + obj.toString() );
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }

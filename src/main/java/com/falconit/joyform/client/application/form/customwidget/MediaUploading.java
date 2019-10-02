@@ -7,6 +7,7 @@ package com.falconit.joyform.client.application.form.customwidget;
 
 
 //import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.GWT;
 import gwt.material.design.addins.client.cropper.constants.Type;
 import gwt.material.design.addins.client.cropper.MaterialImageCropper;
 import gwt.material.design.addins.client.fileuploader.MaterialFileUploader;
@@ -36,7 +37,7 @@ import gwt.material.design.client.ui.MaterialTextBox;
  */
 public class MediaUploading extends MaterialRow{
     
-    public static final String BASED_URL = "http://theburmapeople.com:8090/autofacecentral/";//http://localhost:8090/autofacecentral/";
+    public static final String BASED_URL = GWT.getHostPageBaseURL() + "/";//"http://theburmapeople.com:8090/autofacecentral/";//"http://localhost:8090/autofacecentral/";
     public static final String UPLOAD_FILE_PATH = "form-service/";
     public static final String FILE_TYPE_DOC = "doc";
     public static final String FILE_TYPE_IMAGE = "img";
@@ -107,7 +108,7 @@ public class MediaUploading extends MaterialRow{
         
     private void createDialog( ){
         
-        dialog = new MaterialDialog();
+        dialog = new MaterialDialog( );
         dialog.setType( DialogType.DEFAULT );
         dialog.setDismissible( true );
         dialog.setInDuration(200);
@@ -235,7 +236,8 @@ public class MediaUploading extends MaterialRow{
 
                       String uploadedFileName = event.getTarget().getName( );
                       txtpath.setText( BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
-                      txtpath.removeErrorModifiers();
+                      txtpath.clearErrorText();
+                      
                       if( imgPreview != null )
                          imgPreview.setUrl(  BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
                    }else{

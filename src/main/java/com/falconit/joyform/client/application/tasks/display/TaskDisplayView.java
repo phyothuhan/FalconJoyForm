@@ -128,7 +128,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         if( display.equals(DISPLAY_PROCESS) ){
             taskSelected( );
             loadForm( );
-            new Comments( comments, container, taskId );
+            //new Comments( comments, container, taskId );
         }
         else
             startUp( );//loadOutput( );
@@ -151,7 +151,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
                 + "#login" );
             return;
-        }else{
+        }else if( (userId == null || userName == null) && auth.equals("false") ){
             
             userId = "0";
             userName = "anonymous";
@@ -277,8 +277,23 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     boolean found = false;
                     if( maps.containsKey(Constants.PARENT_TASK)){
                         String task = maps.remove( Constants.PARENT_TASK )[1].toString();
-                        Window.alert("Refer task="+ task );
-                        getForm( container, process, task );
+                        Window.alert("Refer task from variables="+ task );
+                        String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                        found = true;
+                        
+                        for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+                            if( entry.getValue()[0].toString( ).equals( ObjectConverter.TYPE_OBJECT ) ){
+                                for( java.util.Map.Entry<String, Object[]> entry1 : ((java.util.Map<String, Object[]>) entry.getValue()[1]).entrySet() ){
+                                    inputMaps = (java.util.Map<String, Object[]>) entry1.getValue()[1];
+                                }
+                                if( inputMaps == null )
+                                    inputMaps = maps;
+                                
+                                break;
+                            }
+                        }
+                        
+                        getForm( container, process, task, userId );
                     }else {
                         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
                             if( entry.getValue()[0].toString( ).equals( ObjectConverter.TYPE_OBJECT ) ){
@@ -288,21 +303,26 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                                 for( java.util.Map.Entry<String, Object[]> entry1 : ((java.util.Map<String, Object[]>) entry.getValue()[1]).entrySet() ){
                                     inputMaps = (java.util.Map<String, Object[]>) entry1.getValue()[1];
                                 }
+                                if( inputMaps == null )
+                                    inputMaps = maps;
+                                
                                 break;
                             }
                         }
                     }
                     
+                    
                     if( !found )
-                        holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
+                        holder.add( new TaskInputDataRenderring().render( maps, "") );
                     
                 }else{
-                    Window.alert("No input data");
+                    //Window.alert("No input data");
                     //in.setVisible( false ); // auto commit here
                     tab.remove( in );
                     tab.setTabIndex( 0 );
                 }
                 MaterialLoader.loading( false );
+                
             }
 
             @Override
@@ -338,11 +358,11 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     }
                     
                     MaterialLoader.loading( false );
-                    Window.alert( "Refer task=" + referTask );
+                    Window.alert( "Refer task from processes=" + referTask );
                     if ( !referTask.isEmpty() ){
-                        getForm( container, processId, referTask );
+                        getForm( container, processId, referTask, ownerId );
                     }else{
-                        holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
+                        holder.add( new TaskInputDataRenderring().render( inputMaps, "" ) );
                     }
                 }
 
@@ -356,7 +376,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         }catch(Exception ex){Window.alert(ex.getMessage());}
     }
         
-    private void getForm( String container, String process, String task ){
+    private void getForm( String container, String process, String task, String oID ){
         
         MaterialLoader.loading( true );
         
@@ -381,6 +401,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                         StringBuilder sb = new StringBuilder();
                         
                         for( Field field : referForm.getChild()){
+                            try{
+                            
                             if( inputMaps.containsKey(field.getName())){
                                 Object[] values = inputMaps.remove(field.getName());
                                 
@@ -400,6 +422,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                                     maps.put( field.getLabel().get(Constants.LANGUAGE), newValues );
                                 }
                             }
+                            }catch(Exception ex){Window.alert(ex.getMessage());}
                         }
                         holder.add( new TaskInputDataRenderring().render( maps, "") );
                         //referForm.bindWithTaskData( inputMaps );
@@ -411,7 +434,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 }else{
                     holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
                     MaterialLoader.loading( false );
-                    Window.alert("No existing record");
+                    //Window.alert("No existing record");
                 }
             }
 
@@ -424,7 +447,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy( container, process, task, ownerId );
+        crud.getBy( container, process, task, oID );
     }
 
     private void loadForm( ){

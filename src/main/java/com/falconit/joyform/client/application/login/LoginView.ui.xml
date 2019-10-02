@@ -54,7 +54,7 @@
          <m:MaterialPanel shadow="1" addStyleNames="{style.panel}" overflow="HIDDEN">
             <incubator:loadingstate.AppLoadingState ui:field="appLoadingState"/>
           <m:MaterialPanel addStyleNames="{style.fieldPanel}" ui:field="target">
-           <m:MaterialImage url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" type="CIRCLE" addStyleNames="{style.imgProfile} z-depth-1"/>
+           <m:MaterialImage url="falconIT-logo.png" type="CIRCLE" addStyleNames="{style.imgProfile} z-depth-1"/>
            <m:MaterialTextBox ui:field="txtusername" placeholder="Email / Mobile" allowBlank="false" autoValidate="true"/>
            <m:MaterialTextBox ui:field="txtpassword" type="PASSWORD" placeholder="Password" allowBlank="false" autoValidate="true" />
            <m:MaterialButton ui:field="btnLogin" waves="LIGHT" text="Log In" width="100%"/>
