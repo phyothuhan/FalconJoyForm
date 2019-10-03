@@ -25,8 +25,8 @@
              xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
              xmlns:m.table="urn:import:gwt.material.design.client.ui.table">
     <m:MaterialRow>
-        <m:MaterialColumn grid="s12">
-            <m:MaterialRow addStyleNames="code">
+        <m:MaterialColumn grid="s12" shadow="0">
+            <m:MaterialRow shadow="0">
                 <!--
                 <m:MaterialTitle scrollspy="data_pager" title="Pager" description="We developed a pager embeded component to data table to provide a better pagination into your data set." />
                 -->

@@ -6,8 +6,10 @@ import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskStarter;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +19,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -70,7 +73,11 @@ public class TaskAssignmentView extends NavigatedView implements TaskAssignmentP
     TaskAssignmentView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
                 
-        
+                
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
+                
         String value = com.google.gwt.user.client.Window.Location.getParameter("container");
         if( value != null ){
             container = value;

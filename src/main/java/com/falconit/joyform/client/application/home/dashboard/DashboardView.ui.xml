@@ -108,7 +108,7 @@
               <m:MaterialLabel text="108 tasks completed" ui:field="txtcompleted" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>
+              <m:MaterialLink href="?filter=completed#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>

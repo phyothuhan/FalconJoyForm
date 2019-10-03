@@ -29,10 +29,10 @@
         <m:MaterialRow grid="l12 m12 s12">
             
             <m:MaterialRow grid="l12 m12 s12" textAlign="CENTER" marginTop="20">
-                <ma:webp.MaterialWebpImage grid="l2 m2 s4" offset="l5 m5 m4" fallbackExtension="png" maxWidth="150" maxHeight="150" url="https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg" type="CIRCLE" />
+                <ma:webp.MaterialWebpImage ui:field="photo" grid="l2 m2 s4" offset="l5 m5 m4" fallbackExtension="png" maxWidth="150" maxHeight="150" url="https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg" type="CIRCLE" />
                </m:MaterialRow>
             <m:MaterialRow grid="l12 m12 s12" textAlign="CENTER">
-                <m:MaterialTitle marginBottom="20" title="Welcome MOE THANT OO" description="Manage your info, privacy, and security to make falconIT work better for you" />
+                <m:MaterialTitle marginBottom="20" ui:field="txtname" title="Welcome User" description="Manage your info, privacy, and security to make falconIT work better for you" />
             </m:MaterialRow>
             
             <m:MaterialColumn grid="l6 m6 s12">
@@ -47,7 +47,9 @@
                     <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://cdn3.iconfinder.com/data/icons/flat-rounded-7/50/617-512.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     -->
                     <m:MaterialCardTitle text="Personal information" />
-                    <m:MaterialLabel text="See the data in your falconIT Account and choose what activity is saved to personalize your falconIT experience" />
+                    
+                    <m:MaterialLabel text="See the data in your falconIT Account and saved" />
+                <!-- See the data in your falconIT Account and choose what activity is saved to personalize your falconIT experience -->
                 </m:MaterialRow>
              </m:MaterialCardContent>
              <m:MaterialCardAction>
@@ -84,7 +86,7 @@
                     <ma:webp.MaterialWebpImage marginBottom="20" grid="l4 m4 s4" fallbackExtension="png" url="https://image21.net/103/security_png/security_png_16.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     -->
                     <m:MaterialCardTitle text="Security" />
-                    <m:MaterialLabel text="Protect your account, falconIT care your login devices, location, 2 factor authentications" />
+                    <m:MaterialLabel text="Protect your account, falconIT care your login devices, 2FA" />
                 </m:MaterialRow>
              </m:MaterialCardContent>
              <m:MaterialCardAction>

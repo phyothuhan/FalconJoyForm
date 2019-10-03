@@ -24,8 +24,8 @@
        xmlns:ma="urn:import:gwt.material.design.addins.client" >
 
     <ui:with field="i18n" type="com.falconit.joyform.client.resources.MyLang"/>
-  <ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
-  <ui:with field="res" type="com.falconit.joyform.client.resources.MaterialResources"/>
+    <ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
+    <ui:with field="res" type="com.falconit.joyform.client.resources.MaterialResources"/>
 
   <ui:style>
               

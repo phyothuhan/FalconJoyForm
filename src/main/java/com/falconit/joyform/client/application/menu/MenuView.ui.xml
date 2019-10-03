@@ -19,9 +19,10 @@
   -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-			 xmlns:m="urn:import:gwt.material.design.client.ui"
-			 xmlns:ma="urn:import:gwt.material.design.addins.client"
-			 xmlns:m.html="urn:import:gwt.material.design.client.ui.html">
+                xmlns:m="urn:import:gwt.material.design.client.ui"
+                xmlns:ma="urn:import:gwt.material.design.addins.client"
+                xmlns:incubator="urn:import:gwt.material.design.incubator.client"
+                xmlns:m.html="urn:import:gwt.material.design.client.ui.html">
 
         <ui:with field="i18n" type="com.falconit.joyform.client.resources.MyLang"/>
 	<ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
@@ -67,17 +68,27 @@
 	<m:MaterialPanel>
 		<m:MaterialHeader ui:field="header" marginTop="-56" width="100%">
 			<m:MaterialNavBar ui:field="navBar" width="100%" backgroundColor="BLUE" activates="sideBar" textColor="WHITE">
-                            <m:MaterialNavBrand paddingLeft="60" text="falconIT" />
-				<m:MaterialLink ui:field="btnSearch" iconType="SEARCH" iconColor="WHITE" float="RIGHT"/>
+                            <m:MaterialNavBrand paddingLeft="5" text="falconIT" />
+				<m:MaterialLink ui:field="btnSearch" iconType="SEARCH" iconColor="WHITE" float="RIGHT" visible="false"/>
 				
-                                <ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
+                                <incubator:language.LanguageSelector ui:field="languageSelector" title="Language" float="RIGHT"/>
                                 
-                                <m:MaterialLink ui:field="account" visible="true" float="RIGHT" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" />
+                                <ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
+                                <!--
+                                <m:MaterialLink ui:field="logout" visible="false" float="RIGHT" iconType="EXIT_TO_APP" marginLeft="7" marginRight="7" tooltip="Logout" textColor="WHITE" waves="LIGHT" />
+                                -->
+                                <m:MaterialLink ui:field="account" activates="dp6" visible="false" float="RIGHT" iconType="ACCOUNT_CIRCLE" tooltip="Account" textColor="WHITE" waves="LIGHT" />
+                                
                                 <!--
                                 <m:MaterialLink float="RIGHT" iconType="NOTIFICATIONS_ACTIVE" marginRight="30" tooltip="Notifications" textColor="WHITE" waves="LIGHT" ui:field="notifications" iconPosition="NONE" >
                                     <m:MaterialBadge backgroundColor="RED" text="6" textColor="WHITE"  activates="dp-5" />
                                 </m:MaterialLink>
                                 -->
+                                
+                            <m:MaterialDropDown activator="dp6" belowOrigin="true" constrainWidth="false">
+                                <m:MaterialLink text="Profile" targetHistoryToken="{tokens.getPersonal}" textColor="BLACK" iconType="EDIT"/>
+                                <m:MaterialLink ui:field="logout" text="Logout" textColor="BLACK" iconType="EXIT_TO_APP"/>
+                            </m:MaterialDropDown>
 			</m:MaterialNavBar>
 
 			<m:MaterialNavBar ui:field="navBarSearch" visible="false">
@@ -106,7 +117,7 @@
                                     <m:MaterialCollapsibleBody>
                                             <m.html:UnorderedList>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getFormediting}" text="Create Apps" waves="DEFAULT"/>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getDashboard}" text="Mamagement Apps" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getDashboard}" text="Mamage Apps" waves="DEFAULT"/>
                                             </m.html:UnorderedList>
                                     </m:MaterialCollapsibleBody>
                             </m:MaterialCollapsibleItem>

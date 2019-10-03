@@ -29,16 +29,16 @@
                     <!-- addStyleNames="code" -->
         <m:MaterialRow shadow="0" grid="l12 m12 s12" height="2000px">
 
-                        <m:MaterialRow>
+            <m:MaterialRow>
                 <m:MaterialPanel ui:field="source" grid="s12 m12 l12" backgroundColor="BLUE" paddingTop="50" shadow="1" height="100px" width="300px">
                     <m:MaterialLabel ui:field="lblproname" grid="l12 m12 s12"/>
                     <combobox:MaterialComboBox ui:field="cboproperty" grid="l12" label="Pro" visible="true"/>
                 </m:MaterialPanel>
             </m:MaterialRow>
             
-            <ma:stepper.MaterialStepper ui:field="stepper" detectOrientation="true">
+            <ma:stepper.MaterialStepper ui:field="stepper" detectOrientation="true" marginBottom="70">
                     
-                <ma:stepper.MaterialStep step="1" title="Apps" description="Apps and tasks" >
+                <ma:stepper.MaterialStep step="1" title="Apps" description="Apps and tasks" textColor="TEAL" marginBottom="20" >
                  <m:MaterialPanel width="100%">
                      <combobox:MaterialComboBox ui:field="cbocontainer" grid="l12 m12 s12" label="Project Name"/>
                      <combobox:MaterialComboBox ui:field="cboprocess" grid="l12 m12 s12" label="Process Name"/>
@@ -49,8 +49,8 @@
                  <m:MaterialButton ui:field="btnPrev1" text="Cancel" grid="l4" marginTop="12" type="FLAT" waves="DEFAULT"/>
                 </ma:stepper.MaterialStep>
                 
-                <ma:stepper.MaterialStep step="2" title="Process field data" description="The datum you want to work or you need" >
-                 <m:MaterialRow width="100%" ui:field="fieldholder" borderBottom="1px solid TEAL">
+                <ma:stepper.MaterialStep step="2" title="Process field data" description="The datum you want to work or you need"  textColor="TEAL" marginBottom="20">
+                 <m:MaterialRow width="100%" ui:field="fieldholder" border="1px solid TEAL" marginBottom="20">
                      
                  </m:MaterialRow>
                  <m:MaterialRow grid="l12 m12 s12" offset="l6 m6" >
@@ -61,8 +61,8 @@
                  <m:MaterialButton ui:field="btnPrev2" text="Back" grid="l4" marginTop="12" type="FLAT" waves="DEFAULT"/>
                 </ma:stepper.MaterialStep>
                 
-                <ma:stepper.MaterialStep step="3" title="Design" description="Make your form design" >
-                    <m:MaterialRow border="1px solid TEAL" padding="10" >
+                <ma:stepper.MaterialStep step="3" title="Design" description="Make your form design"  textColor="TEAL" marginBottom="20">
+                    <m:MaterialRow border="1px solid TEAL" padding="10"  marginBottom="20">
                         <m:MaterialTitle ui:field="txtTitle" textColor="BLACK" textAlign="CENTER" marginTop="15"/>
                         <m:MaterialPanel width="100%" ui:field="holder">
                         </m:MaterialPanel>
@@ -72,9 +72,12 @@
                  <m:MaterialButton ui:field="btnPrev3" text="Back" grid="l4" marginTop="12" type="FLAT" waves="DEFAULT"/>
                 </ma:stepper.MaterialStep>
                 
-                <ma:stepper.MaterialStep step="4" title="Workflow" description="design your app's workflows" >
+                <ma:stepper.MaterialStep step="4" title="Usage" description="share your form or embedded into your apps"  textColor="TEAL" marginBottom="20">
                  <m:MaterialPanel width="100%" >
-                     <m:MaterialLabel text="this process is under development and try on business central" grid="l12 m12 s12"/>
+                     
+                     <m:MaterialTextArea ui:field="txtshare" grid="l12 m12 s12" label="Share link" resizeRule="AUTO" />
+                     <m:MaterialTextArea ui:field="txtembedded" grid="l12 m12 s12" label="Embedded link" resizeRule="AUTO" />
+                     
                  </m:MaterialPanel>
                  <m:MaterialButton ui:field="btnContinue4" text="Finish" grid="l4" marginTop="12" backgroundColor="TEAL" textColor="WHITE" waves="DEFAULT"/>
                  <m:MaterialButton ui:field="btnPrev4" text="Back" grid="l4" marginTop="12" type="FLAT" waves="DEFAULT"/>

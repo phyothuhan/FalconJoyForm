@@ -42,6 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.falconit.joyform.client.place.NameTokens;
+import com.falconit.joyform.client.resources.MyLang;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialTextBox;
@@ -132,7 +133,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
     
 //    public interface OMapper extends ObjectMapper<Users> {}
     private void login(){
-        appLoadingState.setState(State.LOADING, "Loggin in", "Please wait while logging in your account.");
+        appLoadingState.setState(State.LOADING, MyLang.LANG.msg_login(), MyLang.LANG.msg_login_wait() );
         HumanTaskHelper helper = new HumanTaskHelper();
         helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
             @Override
@@ -151,27 +152,28 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                         String cid = userMap.get("customerId")[1].toString();
                         String roles = userMap.get("roles")[1].toString();
                         
-                    appLoadingState.setState( State.SUCCESS, "Successfully logged in", "Welcome " + name );
+                    appLoadingState.setState( State.SUCCESS, MyLang.LANG.msg_login_success( ), "Welcome " + name );
                     
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, name );
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, id );
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );//customerId
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, roles );
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, txtpassword.getText( ) + "" );
                     History.newItem( NameTokens.welcome );
+                    Window.Location.reload( );
                     } catch (Exception ex) {
                         Window.alert( "Error " + ex.getMessage());
                         Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }else{
-                    appLoadingState.setState( State.ERROR, "Failed logging in", message );
+                    appLoadingState.setState( State.ERROR, MyLang.LANG.msg_login_fail_title( ), message );
                 }
             }
 
             @Override
             public void fail( String message, int stage ) {
               Window.alert( message );
-              appLoadingState.setState(State.ERROR, "Failed logging in", "Please check your Internet connection.");
+              appLoadingState.setState(State.ERROR, MyLang.LANG.msg_login_fail_title( ), MyLang.LANG.msg_login_fail( ));
             }
         });
         

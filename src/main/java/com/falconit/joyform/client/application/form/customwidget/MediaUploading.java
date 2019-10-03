@@ -6,7 +6,8 @@
 package com.falconit.joyform.client.application.form.customwidget;
 
 
-import com.google.gwt.user.client.Window;
+//import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.GWT;
 import gwt.material.design.addins.client.cropper.constants.Type;
 import gwt.material.design.addins.client.cropper.MaterialImageCropper;
 import gwt.material.design.addins.client.fileuploader.MaterialFileUploader;
@@ -15,17 +16,17 @@ import gwt.material.design.addins.client.fileuploader.base.UploadFile;
 import gwt.material.design.addins.client.fileuploader.events.CompleteEvent;
 import gwt.material.design.addins.client.fileuploader.events.SuccessEvent;
 import gwt.material.design.addins.client.fileuploader.events.TotalUploadProgressEvent;
+import gwt.material.design.addins.client.window.MaterialWindow;
 import gwt.material.design.client.constants.ButtonSize;
 import gwt.material.design.client.constants.ButtonType;
 import gwt.material.design.client.constants.Color;
-import gwt.material.design.client.constants.DialogType;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.ui.MaterialAnchorButton;
 import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialColumn;
-import gwt.material.design.client.ui.MaterialDialog;
 import gwt.material.design.client.ui.MaterialDialogFooter;
 import gwt.material.design.client.ui.MaterialImage;
+import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialProgress;
 import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialTextBox;
@@ -36,15 +37,15 @@ import gwt.material.design.client.ui.MaterialTextBox;
  */
 public class MediaUploading extends MaterialRow{
     
-    public static final String BASED_URL = "http://localhost:8090/autofacecentral/";
+    public static final String BASED_URL = GWT.getHostPageBaseURL() + "/";//"http://theburmapeople.com:8090/autofacecentral/";//"http://localhost:8090/autofacecentral/";
     public static final String UPLOAD_FILE_PATH = "form-service/";
     public static final String FILE_TYPE_DOC = "doc";
     public static final String FILE_TYPE_IMAGE = "img";
     public static final String FILE_TYPE_FACIAL = "facial";
     private MaterialTextBox txtpath;
-    private MaterialDialog dialog;
-    private MaterialDialog dialogPreview;
-    private MaterialDialog dialogCropper;
+    private MaterialWindow dialog;
+    private MaterialWindow dialogPreview;
+    private MaterialWindow dialogCropper;
     private MaterialImage imgPreview;
     private MaterialImageCropper cropper;
     private String type;
@@ -68,7 +69,7 @@ public class MediaUploading extends MaterialRow{
         
         MaterialAnchorButton btnupload = new MaterialAnchorButton( );
         btnupload.setType( ButtonType.FLOATING );
-        btnupload.setBackgroundColor( Color.GREEN );
+        btnupload.setBackgroundColor( Color.TEAL );
         btnupload.setIconType( IconType.CLOUD_UPLOAD );
         btnupload.setSize( ButtonSize.MEDIUM );
         btnupload.setTooltip("Upload");
@@ -84,7 +85,7 @@ public class MediaUploading extends MaterialRow{
 
         MaterialAnchorButton btnpreview = new MaterialAnchorButton( );
         btnpreview.setType( ButtonType.FLOATING );
-        btnpreview.setBackgroundColor( Color.GREEN );
+        btnpreview.setBackgroundColor( Color.TEAL );
         btnpreview.setIconType( IconType.PHOTO_ALBUM );
         btnpreview.setSize( ButtonSize.MEDIUM );
         btnpreview.setTooltip("Preview");
@@ -107,12 +108,22 @@ public class MediaUploading extends MaterialRow{
         
     private void createDialog( ){
         
-        dialog = new MaterialDialog();
-        dialog.setType( DialogType.DEFAULT );
-        dialog.setDismissible( true );
-        dialog.setInDuration(200);
-        dialog.setOutDuration(200);
+        dialog = new MaterialWindow( );
+        dialog.setWidth("50%");
+        dialog.setTitle( "Upload your photo/doc" );
+        dialog.setToolbarColor(Color.GREY_DARKEN_3);
+        
+        //dialog.setType( DialogType.DEFAULT );
+        //dialog.setDismissible( true );
+        //dialog.setInDuration(200);
+        //dialog.setOutDuration(200);
         dialog.setPadding( 10 );
+        
+        MaterialLabel lbl = new MaterialLabel( );
+        lbl.setTextColor(Color.RED_DARKEN_2);
+        dialog.add(lbl);
+        
+        
         
         MaterialFileUploader fileLoader = new MaterialFileUploader( );
         fileLoader.setAcceptedFiles( "image/*,application/pdf,.doc,.docx,.xls,.xlsx" );
@@ -130,23 +141,29 @@ public class MediaUploading extends MaterialRow{
         btnclose.setText("Close");
         btnclose.setType( ButtonType.FLAT );
         btnclose.addClickHandler(handler ->{
-            dialog.close();
+            dialog.close( );
         });
         footer.add(btnclose);
         dialog.add(footer);
         add( dialog );
    
-        uploadFile( fileLoader, null, null );
+        uploadFile( fileLoader, null, null, lbl );
     }
     
     private void previewDialog( ){
         
-        dialogPreview = new MaterialDialog();
+        dialogPreview = new MaterialWindow();
+        dialogPreview.setWidth("50%");
+        dialogPreview.setTitle( "Preview" );
+        dialogPreview.setToolbarColor(Color.GREY_DARKEN_3);
+        dialogPreview.setPadding( 10 );
+        
+        /*
         dialogPreview.setType( DialogType.DEFAULT );
         dialogPreview.setDismissible( true );
         dialogPreview.setInDuration(200);
         dialogPreview.setOutDuration(200);
-        dialogPreview.setPadding( 10 );
+        */
         
         imgPreview = new MaterialImage();
         imgPreview.setMinHeight("250px");
@@ -169,12 +186,12 @@ public class MediaUploading extends MaterialRow{
         
     private void previewCropper( ){
         
-        dialogCropper = new MaterialDialog();
-        dialogCropper.setType( DialogType.DEFAULT );
-        dialogCropper.setDismissible( true );
-        dialogCropper.setInDuration(200);
-        dialogCropper.setOutDuration(200);
+        dialogCropper = new MaterialWindow();
+        dialogCropper.setWidth("50%");
+        dialogCropper.setTitle( "Image cropper" );
+        dialogCropper.setToolbarColor(Color.GREY_DARKEN_3);
         dialogCropper.setPadding( 10 );
+        
         
         cropper = new MaterialImageCropper();
         //imgPreview.setMinHeight("350px");
@@ -193,7 +210,7 @@ public class MediaUploading extends MaterialRow{
         cropper.addCropHandler(valueChangeEvent -> {
             txtpath.setText( valueChangeEvent.getResult() );
             cropper.setUrl( txtpath.getText() );
-            cropper.reload();
+            cropper.reload( );
             //imgPreview.setUrl(valueChangeEvent.getResult());
         });
         
@@ -209,7 +226,7 @@ public class MediaUploading extends MaterialRow{
         
     }
         
-    private void uploadFile( MaterialFileUploader uploader, MaterialProgress progress, MaterialImage imgPreview ){
+    private void uploadFile( MaterialFileUploader uploader, MaterialProgress progress, MaterialImage imgPreview, MaterialLabel lbl ){
          uploader.addTotalUploadProgressHandler(new TotalUploadProgressEvent.TotalUploadProgressHandler() {
             @Override
             public void onTotalUploadProgress(TotalUploadProgressEvent event) {
@@ -229,16 +246,20 @@ public class MediaUploading extends MaterialRow{
         uploader.addSuccessHandler(new SuccessEvent.SuccessHandler<UploadFile>() {
             @Override
             public void onSuccess(SuccessEvent<UploadFile> event) {
-                Window.alert( "Body="+ event.getResponse().getBody() );
+                //Window.alert( "Body="+ event.getResponse().getBody() );
                 if( type.equals(FILE_TYPE_FACIAL) ) {
                    if( event.getResponse().getBody().equals("OK")){
 
                       String uploadedFileName = event.getTarget().getName( );
                       txtpath.setText( BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
-                      txtpath.removeErrorModifiers();
+                      txtpath.clearErrorText();
+                      txtpath.clearStatusText();
+                      lbl.setText("");
+                      
                       if( imgPreview != null )
                          imgPreview.setUrl(  BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
                    }else{
+                       lbl.setText("* Invalid photo, photo must have face *");
                         txtpath.setErrorText("* Photo must have your face *");
                         txtpath.setText( "" );
                         if( imgPreview != null )
@@ -249,10 +270,11 @@ public class MediaUploading extends MaterialRow{
                    txtpath.setText( BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
                    if( imgPreview != null && !type.equals(FILE_TYPE_DOC))
                       imgPreview.setUrl(  BASED_URL + UPLOAD_FILE_PATH + unitval + "-" + uploadedFileName );
+                    dialog.close( );
                 }
                 
                 if( !type.equals(FILE_TYPE_DOC) && txtpath.getText().length() > 10 ){
-                    dialog.close();
+                    dialog.close( );
                     cropper.setUrl( txtpath.getText() );
                     cropper.reload();
                     dialogCropper.open();

@@ -31,7 +31,6 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.falconit.joyform.client.application.ApplicationPresenter;
 import com.falconit.joyform.client.event.SetPageTitleEvent;
 import com.falconit.joyform.client.place.NameTokens;
-import com.falconit.joyform.client.resources.MyLang;
 
 public class AboutPresenter extends Presenter<AboutPresenter.MyView, AboutPresenter.MyProxy> {
     public interface MyView extends View {
@@ -51,6 +50,6 @@ public class AboutPresenter extends Presenter<AboutPresenter.MyView, AboutPresen
     protected void onReveal() {
         super.onReveal();
 
-        SetPageTitleEvent.fire( MyLang.LANG.heading(), "A Material Design look and feel for GWT Apps.", "", "", this);
+        SetPageTitleEvent.fire( "", "A Material Design look and feel for GWT Apps.", "", "", this);
     }
 }

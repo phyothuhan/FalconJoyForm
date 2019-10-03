@@ -24,18 +24,22 @@ package com.falconit.joyform.client.application.form.editing;
 import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
+import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessVariables;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,7 +52,6 @@ import gwt.material.design.client.constants.CheckBoxType;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.DialogType;
 import gwt.material.design.client.constants.Display;
-import gwt.material.design.client.constants.FieldType;
 import gwt.material.design.client.constants.IconPosition;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.ui.*;
@@ -88,6 +91,9 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     @UiField
     MaterialTextBox txtformName;
     
+    @UiField
+    MaterialTextArea txtshare, txtembedded;
+    
     @UiField 
     MaterialComboBox cbocontainer, cboprocess, cboformtype, cboaddfield, cboproperty;
 
@@ -111,6 +117,10 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     FormEditingView(Binder uiBinder) {
         
         initWidget( uiBinder.createAndBindUi( this ) );
+        
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
         
         userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
         
@@ -238,6 +248,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                 myForm.setCreated(new java.util.Date());
             myForm.setUpdated(new java.util.Date());
             myForm.setActors(new String[]{"everyone"});
+            myForm.setOwner( Long.parseLong(userId) );
             myForm.setGroups(new String[]{});
             myForm.setStatus( 1 );
             
@@ -251,6 +262,19 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     void onFormDesign(ClickEvent e){
         try {
             createForm( );
+            String shareLink = 
+                "?container=" + cbocontainer.getSingleValue().toString()
+                + "&process=" + cboprocess.getSingleValue().toString()
+                + "&title=" + cboprocess.getSingleValue().toString()
+                + "&taskName=" + Form.TASK_NAME_START_UP
+                + "&display=" + TaskDisplayView.DISPLAY_START_UP
+                + "&ownerId=" + userId
+                + "&owner=" + CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME )
+                + "#taskdisplay";
+            
+            txtshare.setText( GWT.getHostPageBaseURL() + shareLink );
+            txtembedded.setText("<iframe src=\""+ GWT.getHostPageBaseURL() + shareLink +"\"></iframe>");//<iframe src="URL"></iframe>
+            
         } catch (Exception ex) {
             Window.alert("Error form creating " + ex.getMessage());
         }
@@ -556,7 +580,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         
         MaterialRow row = new MaterialRow( );
         row.setGrid("l12 m12 s12");
-        
+        row.setMarginTop(15);
                 
         MaterialColumn colName = new MaterialColumn();
         colName.setGrid("l2 m2 s12");
@@ -623,13 +647,18 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             colLabel.setGrid("l4 m4 s12");
             row.add(colLabel);
             
-            MaterialTextBox txtLabel = new MaterialTextBox();
-            txtLabel.setText( key );
-            //txtLabel.setLabel("Label");
-            txtLabel.setFieldType(FieldType.OUTLINED);
+            //MaterialTextBox txtLabel = new MaterialTextBox();
+            //txtLabel.setText( key );
+            //txtLabel.setFieldType(FieldType.OUTLINED);
             //txtLabel.setGrid("l10 m10 s10");
-            colLabel.add( txtLabel );
-            
+            //colLabel.add( txtLabel );
+            MaterialComboBox cboLabel = new MaterialComboBox();
+            cboLabel.setTags(true);
+            cboLabel.setMultiple(true);
+            cboLabel.setCloseOnSelect(true);
+            cboLabel.setHelperText("en:EN label, my:MM label, etc.");
+            cboLabel.setTooltip("en:English label, my:ျမန္မာအညႊန္း, jp:日本語, zh:中文, kr:한국어, th:ไทย, hi:हिंदी, etc");
+            colLabel.add( cboLabel );
             /*            
             MaterialIcon lang = new MaterialIcon();
             lang.setIconType(IconType.LANGUAGE );
@@ -672,7 +701,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             
             MaterialAnchorButton btnedit = new MaterialAnchorButton( );
             btnedit.setType( ButtonType.FLOATING );
-            btnedit.setBackgroundColor( Color.GREEN );
+            btnedit.setBackgroundColor( Color.TEAL );
             btnedit.setIconType( IconType.ADD_CIRCLE );
             btnedit.setSize( ButtonSize.MEDIUM );
             //btnedit.setFloat(Style.Float.RIGHT);
@@ -762,7 +791,16 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             
             if( oldField != null ){
                 Field oldChild = oldField.getChildren().get(0);
-                txtLabel.setText(oldChild.getLabel().get(Constants.LANGUAGE));// this is hard code for test only
+                
+                java.util.List<String> selectedItems = new java.util.ArrayList<>();
+                for( java.util.Map.Entry<String, String> entry : oldChild.getLabel().entrySet() ){
+                    cboLabel.addItem( entry.getKey() + ":" + entry.getValue() );
+                    selectedItems.add( entry.getKey() + ":" + entry.getValue() );
+                }
+                cboLabel.setValues(selectedItems, false);
+                
+                //txtLabel.setText(oldChild.getLabel().get(Constants.LANGUAGE));// this is hard code for test only
+                
                 chk.setValue(oldChild.isAllowBlank());
                 if( oldChild.getWidgetType().equals(Field.WIDGET_COMBO_BOX)
                     ||oldChild.getWidgetType().equals(Field.WIDGET_RADIO_GROUP) ){
@@ -805,9 +843,14 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                 }
                 
                 cbogroup.setSingleValue(oldChild.getWidgetType());
+                
+            }else{
+                java.util.List<String> selectedItems = new java.util.ArrayList<>();
+                cboLabel.addItem( "en:" + key );
+                selectedItems.add( "en:" + key );
+                cboLabel.setValues(selectedItems, false);
             }
-            
-            
+
             if( referenceOnly ){
                 fieldholder.remove( row );
                 mapRemove.put( key, row );
@@ -875,13 +918,14 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
              MaterialCheckBox txtName = (MaterialCheckBox) colName.getChildrenList().get(0);
             
              MaterialColumn colLabel =  (MaterialColumn) row.getChildrenList().get(1);
-             MaterialTextBox txtLabel = (MaterialTextBox) colLabel.getChildrenList().get(0);
+             MaterialComboBox txtLabel = (MaterialComboBox) colLabel.getChildrenList().get(0);
              
              MaterialColumn coltype =  (MaterialColumn) row.getChildrenList().get(3);
              MaterialComboBox cbotype = (MaterialComboBox) coltype.getChildrenList().get(0);
              
+
              lstChild.add( addItem( cbotype.getSelectedValue().get(0).toString(), txtName.getText(), 
-            txtName.getText(), txtLabel.getText(), txtLabel.getText(), txtName.getValue() ));
+            txtName.getText(), txtLabel.getValue(), txtName.getValue() ));
         }
         myForm.getChild( ).clear( );
         myForm.setChild( lstChild );
@@ -889,14 +933,18 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     }
     
     private Field addItem( String type, String id, 
-            String name, String label, 
-            String placeHolder, boolean blank ){
+            String name, java.util.List<String> lstlabels ,boolean blank ){
         
         Field f = myForm.contain( name );
         Field child = null;
         
         java.util.Map<String,String> labelLang = new java.util.HashMap<>( );
-        labelLang.put( Constants.LANGUAGE, label );
+        for( String lbl : lstlabels){
+            if( lbl.contains(":"))
+                labelLang.put( lbl.split(":")[0], lbl.split(":")[1] );
+            else
+                labelLang.put( Constants.LANGUAGE, lbl );
+        }
         
         if( f == null ){
             f = new Field( id, labelLang, name );
@@ -911,7 +959,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         child.setId(id);
         child.setName(name);
         child.setLabel(labelLang);
-        child.setPlaceHolder( placeHolder );
+        child.setPlaceHolder( labelLang.get(Constants.LANGUAGE) );
         child.setAllowBlank( blank );
         child.setWidgetType( type );
 
@@ -1063,7 +1111,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                 if( !result.isEmpty() ){
                     MaterialLoader.loading( false );
                     //myForm = result.get( 0 );
-                    myForm.setId(result.get( 0 ).getId() );
+                    myForm.setId( null );
                     myForm.setName(result.get( 0 ).getName());
                     myForm.setContainer(result.get( 0 ).getContainer());
                     myForm.setProcess(result.get( 0 ).getProcess());
@@ -1077,6 +1125,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                     myForm.setUseTimer(result.get( 0 ).isUseTimer());
                     myForm.setTimerDuration(result.get( 0 ).getTimerDuration());
                     myForm.setBackground(result.get( 0 ).getBackground());
+                    myForm.setOwner( Long.parseLong(userId) );
                     txtformName.setText(myForm.getName());
                     myForm.setChild( result.get( 0 ).getChild() );
                     

@@ -5,6 +5,7 @@ package com.falconit.joyform.client.application.tasks.display;
 import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
+import com.falconit.joyform.client.application.profile.personal.PersonCRUD;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
@@ -60,6 +61,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
    private Form form;
    private String owner = "sysadmin@falconbreeze.com";
    private String ownerId = "1";
+   private String auth = "true";
    
     @UiField
     MaterialRow comments, forwards, processing, startup;
@@ -116,13 +118,17 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         if( oID != null ){
             ownerId = oID;
         }
+        String au = com.google.gwt.user.client.Window.Location.getParameter( "auth" );
+        if( au != null ){
+            auth = au;
+        }
         
         //tab.selectTab("out");
         
         if( display.equals(DISPLAY_PROCESS) ){
             taskSelected( );
             loadForm( );
-            new Comments( comments, container, taskId );
+            //new Comments( comments, container, taskId );
         }
         else
             startUp( );//loadOutput( );
@@ -133,16 +139,22 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
         String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
         
-        if( userId == null || userName == null ){
+        if( (userId == null || userName == null) && auth.equals("true") ){
             
             Window.Location.assign(
                 "?container=" + container
                 + "&process=" + process
                 + "&title=" + title
                 + "&taskName=" + title
+                + "&owner=" + owner
+                + "&ownerId=" + ownerId
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
                 + "#login" );
             return;
+        }else if( (userId == null || userName == null) && auth.equals("false") ){
+            
+            userId = "0";
+            userName = "anonymous";
         }
         
         MaterialLoader.loading( true );
@@ -182,6 +194,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 + "&process=" + process 
                 + "&taskName=" + newTaskName 
                 + "&display=" + TaskDisplayView.DISPLAY_PROCESS
+                + "&owner=" + owner
+                + "&ownerId=" + ownerId
                 + "#taskdisplay" );
             
         /*
@@ -254,8 +268,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         startup.setLayoutPosition(Style.Position.ABSOLUTE);
         startup.setVisibility(Style.Visibility.HIDDEN);
         
-        TaskInputDataReader reader = new TaskInputDataReader();
-        reader.setListener(new TaskInputDataReaderListener(){
+        TaskInputDataReader reader = new TaskInputDataReader( );
+        reader.setListener(new TaskInputDataReaderListener( ){
             @Override
             public void result(String taskName, String nodeName, String Skippable, String actor, Map<String, Object[]> maps) {
                 //Window.alert("Task name=" + taskName + ", Node name=" + nodeName+", size=" + maps.size());
@@ -263,32 +277,52 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     boolean found = false;
                     if( maps.containsKey(Constants.PARENT_TASK)){
                         String task = maps.remove( Constants.PARENT_TASK )[1].toString();
-                        Window.alert("Refer task="+ task );
-                        getForm( container, process, task );
+                        Window.alert("Refer task from variables="+ task );
+                        String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                        found = true;
+                        
+                        for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+                            if( entry.getValue()[0].toString( ).equals( ObjectConverter.TYPE_OBJECT ) ){
+                                for( java.util.Map.Entry<String, Object[]> entry1 : ((java.util.Map<String, Object[]>) entry.getValue()[1]).entrySet() ){
+                                    inputMaps = (java.util.Map<String, Object[]>) entry1.getValue()[1];
+                                }
+                                if( inputMaps == null )
+                                    inputMaps = maps;
+                                
+                                break;
+                            }
+                        }
+                        
+                        getForm( container, process, task, userId );
                     }else {
                         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
-                            if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_OBJECT ) ){
+                            if( entry.getValue()[0].toString( ).equals( ObjectConverter.TYPE_OBJECT ) ){
                                 String fqdn = entry.getKey();
                                 outputTaskMappings(  container,  process );
                                 found = true;
                                 for( java.util.Map.Entry<String, Object[]> entry1 : ((java.util.Map<String, Object[]>) entry.getValue()[1]).entrySet() ){
                                     inputMaps = (java.util.Map<String, Object[]>) entry1.getValue()[1];
                                 }
+                                if( inputMaps == null )
+                                    inputMaps = maps;
+                                
                                 break;
                             }
                         }
                     }
                     
+                    
                     if( !found )
-                        holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
+                        holder.add( new TaskInputDataRenderring().render( maps, "") );
                     
                 }else{
-                    Window.alert("No input data");
+                    //Window.alert("No input data");
                     //in.setVisible( false ); // auto commit here
                     tab.remove( in );
-                    tab.setTabIndex(0);
+                    tab.setTabIndex( 0 );
                 }
                 MaterialLoader.loading( false );
+                
             }
 
             @Override
@@ -296,7 +330,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 MaterialLoader.loading( false );
             }
         });
-        reader.read(container, taskId);
+        reader.read( container, taskId );
     }
        
     private void outputTaskMappings( String container, String processId ){
@@ -324,11 +358,11 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     }
                     
                     MaterialLoader.loading( false );
-                    Window.alert( "Refer task=" + referTask );
+                    Window.alert( "Refer task from processes=" + referTask );
                     if ( !referTask.isEmpty() ){
-                        getForm( container, processId, referTask );
+                        getForm( container, processId, referTask, ownerId );
                     }else{
-                        holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
+                        holder.add( new TaskInputDataRenderring().render( inputMaps, "" ) );
                     }
                 }
 
@@ -342,7 +376,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         }catch(Exception ex){Window.alert(ex.getMessage());}
     }
         
-    private void getForm( String container, String process, String task ){
+    private void getForm( String container, String process, String task, String oID ){
         
         MaterialLoader.loading( true );
         
@@ -367,6 +401,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                         StringBuilder sb = new StringBuilder();
                         
                         for( Field field : referForm.getChild()){
+                            try{
+                            
                             if( inputMaps.containsKey(field.getName())){
                                 Object[] values = inputMaps.remove(field.getName());
                                 
@@ -386,6 +422,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                                     maps.put( field.getLabel().get(Constants.LANGUAGE), newValues );
                                 }
                             }
+                            }catch(Exception ex){Window.alert(ex.getMessage());}
                         }
                         holder.add( new TaskInputDataRenderring().render( maps, "") );
                         //referForm.bindWithTaskData( inputMaps );
@@ -397,7 +434,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 }else{
                     holder.add( new TaskInputDataRenderring().render( inputMaps, "") );
                     MaterialLoader.loading( false );
-                    Window.alert("No existing record");
+                    //Window.alert("No existing record");
                 }
             }
 
@@ -410,7 +447,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy( container, process, task, ownerId );
+        crud.getBy( container, process, task, oID );
     }
 
     private void loadForm( ){
@@ -433,7 +470,13 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     form.setDraggable( false );
                     
                     txtTitleReply.setTitle(form.getName());
-                    form.render( fillup );
+                    if( CookieHelper.getMyCookie( Constants.COOKIE_USER_PERSON_ID ) != null ){
+                        long customerId = Long.parseLong(CookieHelper.getMyCookie(Constants.COOKIE_USER_PERSON_ID));
+                        getPerson( customerId );
+                    }else{
+                        form.render( fillup );
+                    }
+                    
                     solveFQDN( form.getFqdn() );
                 }else{
                     tab.remove( out );
@@ -452,6 +495,43 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         });
         
         crud.getBy( container, process, taskName, ownerId );
+    }
+    
+          
+    private void getPerson( long customerId ){
+        MaterialLoader.loading( true );
+        PersonCRUD crud = new PersonCRUD();
+        crud.setListener(new PersonCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+                //Window.alert( "Result = " + result );
+            }
+
+            @Override
+            public void fail(String message) {
+                MaterialLoader.loading( false );
+                Window.alert( "Result = " + message );
+            }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {}
+
+            @Override
+            public void success(Map<String, Object[]> result) {
+                MaterialLoader.loading( false );
+                try {
+                    form.bindWithTaskData( result );
+                } catch (Exception ex) {  }
+                form.render( fillup );
+            }
+
+            @Override
+            public void success(List<Map<String, Object[]>> result) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
+        crud.get( customerId );
     }
     
     @UiHandler("btnsend")

@@ -7,18 +7,14 @@ import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
-import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
-import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import gwt.material.design.addins.client.emptystate.MaterialEmptyState;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.IconPosition;
 import gwt.material.design.client.constants.IconType;
@@ -54,7 +50,12 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
     PrivateAppsView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
         //load();
-        loadForms();
+                
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+            Window.Location.reload( );
+        }else
+            loadForms();
     }
 
         

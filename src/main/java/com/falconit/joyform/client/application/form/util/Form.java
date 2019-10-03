@@ -338,7 +338,7 @@ public class Form implements java.io.Serializable{
 
             for ( int i =0; i < body.length; i++){
                 body[i] = new MaterialCollapsibleBody();
-                
+                //body[i].setPaddingTop(20);
                 MaterialCollapsibleItem item = new MaterialCollapsibleItem();
                 coll.add(item);
 
@@ -398,24 +398,54 @@ public class Form implements java.io.Serializable{
                 }else{
                     String category = f.getCategory();
                     if( category.equals("profile")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[0].add(row);
                     }else if( category.equals("contact")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[1].add(row);
                     }else if( category.equals("places")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[2].add(row);
                     }else if( category.equals("work & education")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[3].add(row);
                     }else if( category.equals("documents")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[4].add(row);
                     }else if( category.equals("travel info")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[5].add(row);
                     }else if( category.equals("family & relationships")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[6].add(row);
-                    }else if( category.equals("health-care")){
-                        body[7].add(row);
                     }else if( category.equals("bio-matric")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
+                        body[7].add(row);
+                    }else if( category.equals("health-care")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[8].add(row);
                     }else if( category.equals("others")){
+                        if( body[0].getChildrenList().isEmpty()){
+                            row.setMarginTop(35);
+                        }
                         body[9].add(row);
                     }
                 }

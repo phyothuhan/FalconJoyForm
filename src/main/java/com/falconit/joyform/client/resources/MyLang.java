@@ -16,34 +16,15 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface MyLang extends Messages{
     public static final MyLang LANG = GWT.create( MyLang.class);
-    String heading();
-    String login();
     
-    String username();
-    String channel();
-    String email();
-    
-    String mobile();
-    String created();
-    String updated();
-    String vip();
-    String gender();
-    String verified();
-    String active();
-    String acType();
-    
-    String name();
-    String nameEn();
-    String groupName();
-    String slug();
-    
-    String title();
-    String category();
-    String premium();
-    String like();
-    String dislike();
-    String view();
-    String update();
-    String edit();
-    String close();
+    String login( );
+    String emailmobile( );
+    String password( );
+    String register( );
+    String keep_me_logged_in( );
+    String msg_login( );
+    String msg_login_wait( );
+    String msg_login_success( );
+    String msg_login_fail_title( );
+    String msg_login_fail();
 }

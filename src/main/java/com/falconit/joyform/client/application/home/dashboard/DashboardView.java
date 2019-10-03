@@ -18,6 +18,7 @@ import com.falconit.joyform.client.application.util.jbpmclient.api.process.Proce
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager.ProcessesManagerListener;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping.ProcessesVariablesMappingListener;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.json.client.JSONArray;
@@ -25,6 +26,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.client.constants.Color;
@@ -64,6 +66,12 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
     @Inject
     DashboardView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
+        
+                
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
+        
         loadProjects();
         loadProcesses();
         loadForms();
