@@ -52,7 +52,6 @@ import gwt.material.design.client.constants.CheckBoxType;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.DialogType;
 import gwt.material.design.client.constants.Display;
-import gwt.material.design.client.constants.FieldType;
 import gwt.material.design.client.constants.IconPosition;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.ui.*;
@@ -658,7 +657,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             cboLabel.setMultiple(true);
             cboLabel.setCloseOnSelect(true);
             cboLabel.setHelperText("en:EN label, my:MM label, etc.");
-            cboLabel.setTooltip("en:English label, my:ျမန္မာအညႊန္း, jp:日本のラベル, zh:中文标签, kr:한국 라벨, th:ป้ายไทย, hi:हिंदी लेबल, etc");
+            cboLabel.setTooltip("en:English label, my:ျမန္မာအညႊန္း, jp:日本語, zh:中文, kr:한국어, th:ไทย, hi:हिंदी, etc");
             colLabel.add( cboLabel );
             /*            
             MaterialIcon lang = new MaterialIcon();

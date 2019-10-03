@@ -41,6 +41,7 @@ import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
 import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -49,6 +50,8 @@ import com.google.gwt.user.client.Window;
 import gwt.material.design.client.ui.MaterialBadge;
 import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
+import gwt.material.design.incubator.client.language.Language;
+import gwt.material.design.incubator.client.language.LanguageSelector;
 import gwt.material.design.themes.amber.ThemeAmber;
 import gwt.material.design.themes.blue.ThemeBlue;
 import gwt.material.design.themes.brown.ThemeBrown;
@@ -81,17 +84,52 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
     @UiField MaterialSearch txtSearch;
     @UiField MaterialComboBox<ThemeLoader.ThemeBundle> comboThemes;
     @UiField MaterialBadge badgeinbox;
-    @UiField MaterialLink account, logout;
+    @UiField MaterialLink account, logout;    
+    @UiField LanguageSelector languageSelector;
 
     @Inject
     MenuView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
+        languageSelector.setLanguages(getLanguages());
     }
 
+            
+    @UiHandler("languageSelector")
+    void selection(ValueChangeEvent<Language> e) {
+        String lang = e.getValue().getValue();
+        //asWidget().getElement().getStyle().setProperty("font-family", "myan3");
+        //Window.alert(lang);
+        /*
+        if( e.getValue().getValue().equalsIgnoreCase("my")){
+            asWidget().getElement().getStyle().setProperty("font-family", "myan3");
+        }else{
+            asWidget().getElement().getStyle().setProperty("font-family", "sans-serif");
+        }
+        */
+    }
+    static List<Language> getLanguages() {
+        List<Language> languages = new ArrayList<>( );
+        Language my = new Language("မြန်မာ", "my", "images/flag-3d-round-250.png");
+        Language en = new Language("English", "en", "images/United_Kingdom_96354.png");
+        Language hi = new Language("हिंदी", "hi", "images/India_96286.png");
+        Language jp = new Language("日本語", "jp", "images/Japan_96239.png");
+        Language kr = new Language("한국어", "kr", "images/Korea_96165.png");
+        Language th = new Language("ไทย", "th", "images/Thailand_96170.png");
+        Language zh = new Language("中文", "zh", "images/China_96342.png");
+        languages.add( my );
+        languages.add( en );
+        languages.add( hi );
+        languages.add( jp );
+        languages.add( kr );
+        languages.add( th );
+        languages.add( zh );
+        return languages;
+    }
+    
     @Override
     protected void onAttach() {
         super.onAttach();
-
+        
         // search close event
         txtSearch.addCloseHandler(event -> {
             navBar.setVisible(true);
@@ -119,8 +157,7 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
         initThemes( );
         initSearches( );
         if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) != null ){
-            account.setVisible(true);
-            logout.setVisible(true);
+            account.setVisible( true );
             loadNoti( );
         }
     }

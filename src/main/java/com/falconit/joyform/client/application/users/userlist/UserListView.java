@@ -21,17 +21,13 @@ package com.falconit.joyform.client.application.users.userlist;
  */
 
 import com.falconit.joyform.client.application.util.Constants;
-import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.HumanTaskHelper;
-import com.falconit.joyform.client.resources.MyLang;
 import com.falconit.joyform.client.ui.CustomRenderer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.client.ui.PersonRowFactory;
 import com.falconit.joyform.shared.entity.Users;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
@@ -47,33 +43,20 @@ import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.client.base.MaterialWidget;
 import gwt.material.design.client.base.viewport.Resolution;
 import gwt.material.design.client.base.viewport.ViewPort;
-import gwt.material.design.client.constants.ButtonType;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.Display;
-import gwt.material.design.client.constants.HideOn;
-import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.constants.TextAlign;
-import gwt.material.design.client.constants.WavesType;
 import gwt.material.design.client.data.ListDataSource;
 import gwt.material.design.client.data.component.RowComponent;
-import gwt.material.design.client.data.events.RowExpandedEvent;
-import gwt.material.design.client.data.events.RowExpandedHandler;
-import gwt.material.design.client.data.events.RowExpandingEvent;
-import gwt.material.design.client.data.events.RowExpandingHandler;
 import gwt.material.design.client.ui.MaterialBadge;
-import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialCheckBox;
-import gwt.material.design.client.ui.MaterialIcon;
 import gwt.material.design.client.ui.MaterialImage;
 import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLoader;
-import gwt.material.design.client.ui.MaterialTextBox;
 import gwt.material.design.client.ui.pager.MaterialDataPager;
-import gwt.material.design.client.ui.pager.actions.PageListBox;
 import gwt.material.design.client.ui.table.MaterialDataTable;
 import gwt.material.design.client.ui.table.cell.TextColumn;
 import gwt.material.design.client.ui.table.cell.WidgetColumn;
-import gwt.material.design.incubator.client.loadingstate.constants.State;
 import gwt.material.design.jquery.client.api.JQueryElement;
 
 import javax.inject.Inject;
@@ -145,7 +128,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
             public String getValue(Users object) {
                 return object.getUsername();
             }
-        }, MyLang.LANG.username());
+        }, "User name");
 
         table.addColumn(new TextColumn<Users>() {
             @Override
@@ -156,7 +139,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
             public String getValue(Users object) {
                 return object.getChannel();
             }
-        }, MyLang.LANG.channel());
+        }, "Channel");
 
                 
         // Example of a widget column!
@@ -183,7 +166,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
                 badge.setLayoutPosition(Style.Position.RELATIVE);
                 return badge;
             }
-        }, MyLang.LANG.acType());
+        }, "A/C type");
         
         table.addColumn(new TextColumn<Users>() {
 //            @Override
@@ -202,7 +185,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
             public String getValue(Users object) {
                 return object.getEmail();
             }
-        }, MyLang.LANG.email());
+        }, "Email");
         
         table.addColumn(new TextColumn<Users>() {
 //            @Override
@@ -221,7 +204,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
             public String getValue(Users object) {
                 return object.getMobile();
             }
-        }, MyLang.LANG.mobile());
+        }, "Mobile");
         
                 
         table.addColumn(new TextColumn<Users>() {
@@ -234,7 +217,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
                 DateTimeFormat dtfd = DateTimeFormat.getFormat("dd/MM/yyyy hh:mm a");
                 return dtfd.format(object.getCreatedAt());
             }
-        }, MyLang.LANG.created());
+        }, "Created");
         
                 
         table.addColumn(new WidgetColumn<Users, MaterialCheckBox>() {
@@ -256,7 +239,7 @@ public class UserListView extends NavigatedView implements UserListPresenter.MyV
                 });
                 return profile;
             }
-        }, MyLang.LANG.active());
+        }, "Active");
         
                 
 //        table.addColumn(new TextColumn<Users>() {

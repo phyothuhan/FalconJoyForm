@@ -4,8 +4,12 @@
  * and open the template in the editor.
  */
 package com.falconit.joyform.client.application.form.customwidget;
+
+
 import gwt.material.design.addins.client.signature.MaterialSignaturePad;
+import gwt.material.design.addins.client.window.MaterialWindow;
 import gwt.material.design.client.constants.ButtonType;
+import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.DialogType;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.ui.MaterialButton;
@@ -21,7 +25,7 @@ import gwt.material.design.client.ui.MaterialRow;
  */
 public class SignatureWidget extends MaterialRow {
     
-    private MaterialDialog dialog;
+    private MaterialWindow dialog;
     private MaterialSignaturePad signaturePad;
     private MaterialImage imageData;
     //private MaterialButton btnok, btnclear;
@@ -67,11 +71,16 @@ public class SignatureWidget extends MaterialRow {
     
     private void createDialog( ){
         
-        dialog = new MaterialDialog();
+        dialog = new MaterialWindow();
+        dialog.setWidth("50%");
+        dialog.setTitle( "Signature pad" );
+        dialog.setToolbarColor(Color.GREY_DARKEN_3);
+        /*
         dialog.setType( DialogType.DEFAULT );
         dialog.setDismissible( true );
         dialog.setInDuration(200);
         dialog.setOutDuration(200);
+        */
         dialog.setPadding( 10 );
         
         signaturePad = new MaterialSignaturePad();

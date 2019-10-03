@@ -22,6 +22,7 @@
              xmlns:ma="urn:import:gwt.material.design.addins.client"
              xmlns:incubator="urn:import:gwt.material.design.incubator.client">
 
+    <ui:with field="i18n" type="com.falconit.joyform.client.resources.MyLang"/>
     <ui:with field='res' type='com.falconit.joyform.client.resources.MaterialResources' />
     <ui:style>
         .panel{
@@ -55,15 +56,15 @@
             <incubator:loadingstate.AppLoadingState ui:field="appLoadingState"/>
           <m:MaterialPanel addStyleNames="{style.fieldPanel}" ui:field="target">
            <m:MaterialImage url="falconIT-logo.png" type="CIRCLE" addStyleNames="{style.imgProfile} z-depth-1"/>
-           <m:MaterialTextBox ui:field="txtusername" placeholder="Email / Mobile" allowBlank="false" autoValidate="true"/>
-           <m:MaterialTextBox ui:field="txtpassword" type="PASSWORD" placeholder="Password" allowBlank="false" autoValidate="true" />
-           <m:MaterialButton ui:field="btnLogin" waves="LIGHT" text="Log In" width="100%"/>
+           <m:MaterialTextBox ui:field="txtusername" placeholder="{i18n.emailmobile}" allowBlank="false" autoValidate="true"/>
+           <m:MaterialTextBox ui:field="txtpassword" type="PASSWORD" placeholder="{i18n.password}" allowBlank="false" autoValidate="true" />
+           <m:MaterialButton ui:field="btnLogin" waves="LIGHT" text="{i18n.login}" width="100%"/>
             <m:MaterialRow addStyleNames="{style.rowAction}">
             <m:MaterialColumn grid="s12 m6 l6">
-             <m:MaterialCheckBox ui:field="chkremember" text="Keep me logged in"/>
+             <m:MaterialCheckBox ui:field="chkremember" text="{i18n.keep_me_logged_in}"/>
             </m:MaterialColumn>
             <m:MaterialColumn grid="s12 m6 l6">
-             <m:MaterialLink ui:field="lnkregister" href="#registration" text="Register" textColor="TEAL"/>
+             <m:MaterialLink ui:field="lnkregister" href="#registration" text="{i18n.register}" textColor="TEAL"/>
             </m:MaterialColumn>
            </m:MaterialRow>
           </m:MaterialPanel>
